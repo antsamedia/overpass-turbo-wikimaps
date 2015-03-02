@@ -107,7 +107,20 @@ $(document).ready(function() {
   overpass.handlers["onQueryError"] = function(errmsg) {alert("An error occured during the execution of the overpass query!\nThis is what overpass API returned:\n" + errmsg);};
   overpass.handlers["onStyleError"] = function(errmsg) {console.log("An error occured while parsing MapCSS styles:\n" + errmsg);};
   overpass.handlers["onGeoJsonReady"] = function() {ide.map.addLayer(overpass.osmLayer);};
-  overpass.handlers["onPopupReady"] = function(p) {p.openOn(ide.map);};
+  overpass.handlers["onPopupReady"] = function(p) {
+    var wikipage = p.layer.feature.properties.tags.wikipedia;
+    p.openOn(ide.map);
+    if (!wikipage) return;
+    $.getJSON("http://www.wikidata.org/w/api.php?action=wbgetentities&sites="+wikipage.substring(0,2)+"wiki&titles="+wikipage.substring(3)+"&format=json&callback=?", function(data) {
+      for (var key in data.entities) {
+        if (!data.entities[key].claims || !data.entities[key].claims.P18) continue;
+        for (var i = 0; i < data.entities[key].claims.P18.length; i++) {
+          var url = "https://commons.wikimedia.org/w/thumb.php?width=400&f=" + data.entities[key].claims.P18[i].mainsnak.datavalue.value;
+          p.setContent('<img style="width: 100%" src="'+url+'">'+p.getContent());
+        }
+      }
+    });
+  };
   overpass.handlers["onDataRecieved"] = function(amount,txt, abortCB,continueCB) {continueCB();};
   // load the data
   ide.update_map();
