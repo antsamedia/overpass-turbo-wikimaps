@@ -3,6 +3,31 @@ function htmlentities(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 $(document).ready(function() {
+  var query = '';
+  query += '[out:json][timeout:25];';
+  query += '(';
+  query += '  (';
+  query += '    node[~"^wikipedia"~"."]({{bbox}});';
+  query += '    way[~"^wikipedia"~"."]({{bbox}});';
+  query += '    relation[~"^wikipedia"~"."]({{bbox}});';
+  query += '    node[~"^wikidata"~"."]({{bbox}});';
+  query += '    way[~"^wikidata"~"."]({{bbox}});';
+  query += '    relation[~"^wikidata"~"."]({{bbox}});';
+  query += '  );';
+  query += '  -';
+  query += '  (';
+  query += '    relation(2092609);';
+  query += '    relation(335178);';
+  query += '    relation(335012);';
+  query += '    relation[boundary="administrative"]({{bbox}});';
+  query += '  );';
+  query += ');';
+  query += 'out body;>;out skel qt;';
+
+  query = query.replace(
+    /{{bbox}}/g, 
+    "60.16740091772243,24.937763214111328,60.17037346991858,24.96"
+  );
   // some initalizations
   $.fn.dialog = function() {
     alert("error :( "+$(this).html());
@@ -11,7 +36,9 @@ $(document).ready(function() {
     appname: "overpass-ide-map",
   }
   settings = {
-    code:{},
+    code:{
+      overpass: query
+    },
     server: "http://overpass-api.de/api/",
     tileServer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     force_simple_cors_request: true,
