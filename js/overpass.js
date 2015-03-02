@@ -407,14 +407,16 @@ setTimeout(function() {
           onEachFeature : function (feature, layer) {
             layer.on('click', function(e) {
               var popup = "";
+              if (feature.properties.tags && feature.properties.tags.name)
+                popup += "<h2>"+feature.properties.tags.name+"</h2>";
               if (feature.properties.type == "node")
-                popup += "<h2>Node <a href='//www.openstreetmap.org/node/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h2>";
+                popup += "<h3>Node <a href='//www.openstreetmap.org/node/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h3>";
               else if (feature.properties.type == "way")
-                popup += "<h2>Way <a href='//www.openstreetmap.org/way/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h2>";
+                popup += "<h3>Way <a href='//www.openstreetmap.org/way/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h3>";
               else if (feature.properties.type == "relation")
-                popup += "<h2>Relation <a href='//www.openstreetmap.org/relation/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h2>";
+                popup += "<h3>Relation <a href='//www.openstreetmap.org/relation/"+feature.properties.id+"' target='_blank'>"+feature.properties.id+"</a></h3>";
               else
-                popup += "<h2>"+feature.properties.type+" #"+feature.properties.id+"</h2>";
+                popup += "<h3>"+feature.properties.type+" #"+feature.properties.id+"</h3>";
               if (feature.properties && feature.properties.tags && !$.isEmptyObject(feature.properties.tags)) {
                 popup += '<h3>Tags:</h3><ul class="plain">';
                 $.each(feature.properties.tags, function(k,v) {
