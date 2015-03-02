@@ -40,7 +40,8 @@ $(document).ready(function() {
       overpass: query
     },
     server: "http://overpass-api.de/api/",
-    tileServer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+//    tileServer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    tileServer: "http://warper.wmflabs.org/maps/tile/148/{z}/{x}/{y}",
     force_simple_cors_request: true,
     disable_poiomatic: true,
   };
