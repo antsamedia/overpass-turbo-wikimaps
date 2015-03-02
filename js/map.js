@@ -49,6 +49,17 @@ $(document).ready(function() {
     getQuery: function() { return settings.code["overpass"]; },
     getQueryLang: function() {return ($.trim(settings.code["overpass"]).match(/^</))?"xml":"OverpassQL";},
     update_map: function() {overpass.run_query(ide.getQuery(true,false),ide.getQueryLang());},
+    mapcss: (''
+            +'node[start_date=~/^19/] {dashes: 5,8; fill-opacity: 0}'
+            +'way[start_date=~/^19/] {dashes: 5,8; fill-opacity: 0}'
+            +'relation[start_date=~/^19/] {dashes: 5,8; fill-opacity: 0}'
+            +'node[start_date=~/^20/] {dashes: 5,8; fill-opacity: 0}'
+            +'way[start_date=~/^20/] {dashes: 5,8; fill-opacity: 0}'
+            +'relation[start_date=~/^20/] {dashes: 5,8; fill-opacity: 0}'
+            //+'node, way, relation { text: name;}'
+//            +'area, line, node, relation {color: #f95; fill-color: #fc0}'
+            +'node, way, relation {color: blue; fill-color: blue}'
+    )
   };
   styleparser.PointStyle = function() {}; styleparser.PointStyle.prototype.properties = []; // hack
   overpass.init();
@@ -94,6 +105,7 @@ $(document).ready(function() {
   overpass.handlers["onEmptyMap"] = function(empty_msg, data_mode) {$('<div id="map_blank" style="z-index:1; display:block; position:absolute; top:42px; width:100%; text-align:center; background-color:#eee; opacity: 0.8;">This map intentionally left blank. <small>('+empty_msg+')</small></div>').appendTo("#map");};
   overpass.handlers["onAjaxError"] = function(errmsg) {alert("An error occured during the execution of the overpass query!\n" + errmsg);};
   overpass.handlers["onQueryError"] = function(errmsg) {alert("An error occured during the execution of the overpass query!\nThis is what overpass API returned:\n" + errmsg);};
+  overpass.handlers["onStyleError"] = function(errmsg) {console.log("An error occured while parsing MapCSS styles:\n" + errmsg);};
   overpass.handlers["onGeoJsonReady"] = function() {ide.map.addLayer(overpass.osmLayer);};
   overpass.handlers["onPopupReady"] = function(p) {p.openOn(ide.map);};
   overpass.handlers["onDataRecieved"] = function(amount,txt, abortCB,continueCB) {continueCB();};
